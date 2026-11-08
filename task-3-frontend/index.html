@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A simple task management application">
+  <title>TaskFlow | Task Manager</title>
+
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="container">
+      <h1>TaskFlow</h1>
+      <p>Manage your tasks and stay productive.</p>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="task-form-section">
+      <h2>Create a Task</h2>
+
+      <form id="task-form">
+        <div class="form-group">
+          <label for="title">Task Title</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            placeholder="Enter task title"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            placeholder="Describe your task"
+            required
+          ></textarea>
+        </div>
+
+        <button type="submit" id="submit-button">
+          Add Task
+        </button>
+      </form>
+    </section>
+
+    
+    <section class="edit-form-section" id="edit-form-section" hidden>
+    <h2>Edit Task</h2>
+
+    <form id="edit-task-form">
+        <div class="form-group">
+        <label for="edit-title">Task Title</label>
+        <input
+            type="text"
+            id="edit-title"
+            required
+        >
+        </div>
+
+        <div class="form-group">
+        <label for="edit-description">Description</label>
+        <textarea
+            id="edit-description"
+            required
+        ></textarea>
+        </div>
+
+        <div class="form-actions">
+        <button type="submit">Save Changes</button>
+        <button type="button" id="cancel-edit" class="cancel-button">
+            Cancel
+        </button>
+        </div>
+    </form>
+    </section>
+
+
+    <section class="tasks-section">
+      <div class="section-heading">
+        <h2>My Tasks</h2>
+        <span id="task-count">0 Tasks</span>
+      </div>
+
+      <div id="task-list">
+        <!-- Tasks will be rendered here using JavaScript -->
+      </div>
+
+      <p id="empty-message">Loading your tasks...</p>
+    </section>
+
+  </main>
+
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
