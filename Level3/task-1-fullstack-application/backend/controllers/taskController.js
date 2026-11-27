@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Task = require('../models/Task');
 const cache = require('../utils/cache');
 
+
 const getTasks = async (req, res) => {
   try {
     const page = Math.max(1, Number.parseInt(req.query.page, 10) || 1);
@@ -12,14 +13,21 @@ const getTasks = async (req, res) => {
     );
 
     const skip = (page - 1) * limit;
+    const userFilter = { user: req.user.id };
 
-    const [tasks, total] = await Promise.all([
-      Task.find({ user: req.user.id })
+    const [tasks, total, completed] = await Promise.all([
+      Task.find(userFilter)
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)
         .lean(),
-      Task.countDocuments({ user: req.user.id }),
+
+      Task.countDocuments(userFilter),
+
+      Task.countDocuments({
+        ...userFilter,
+        completed: true,
+      }),
     ]);
 
     return res.status(200).json({
@@ -30,6 +38,11 @@ const getTasks = async (req, res) => {
         limit,
         totalPages: Math.ceil(total / limit),
       },
+      stats: {
+        total,
+        completed,
+        pending: total - completed,
+      },
     });
   } catch (error) {
     return res.status(500).json({
@@ -37,6 +50,7 @@ const getTasks = async (req, res) => {
     });
   }
 };
+
 
 const createTask = async (req, res) => {
   try {

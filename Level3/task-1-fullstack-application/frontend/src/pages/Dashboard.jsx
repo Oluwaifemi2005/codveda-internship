@@ -31,34 +31,30 @@ const Dashboard = () => {
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const fetchTasks = useCallback(async () => {
-    setLoading(true);
-    setError('');
+const fetchTasks = useCallback(async () => {
+  setLoading(true);
+  setError('');
 
-    try {
-      const response = await api.get(`/tasks?page=${page}&limit=5`);
+  try {
+    const response = await api.get(`/tasks?page=${page}&limit=5`);
 
-      const fetchedTasks = response.data.tasks;
-      const pagination = response.data.pagination;
+    const { tasks, pagination, stats } = response.data;
 
-      setTasks(fetchedTasks);
-      setTotalPages(pagination.totalPages);
+    setTasks(tasks);
+    setTotalPages(pagination.totalPages);
 
-      const completed = fetchedTasks.filter(
-        (task) => task.completed
-      ).length;
+    setStats({
+      total: stats.total,
+      completed: stats.completed,
+      pending: stats.pending,
+    });
+  } catch (error) {
+    setError(error.response?.data?.message || 'Failed to load tasks.');
+  } finally {
+    setLoading(false);
+  }
+}, [page]);
 
-      setStats({
-        total: pagination.total,
-        completed,
-        pending: pagination.total - completed,
-      });
-    } catch (error) {
-      setError(error.response?.data?.message || 'Failed to load tasks.');
-    } finally {
-      setLoading(false);
-    }
-  }, [page]);
 
   useEffect(() => {
     fetchTasks();
